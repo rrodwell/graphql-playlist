@@ -10,9 +10,12 @@ const {
 } = graphql;
 
 let books = [
-  { id: '1', name: 'Test1', genre: 'Fantasy'},
-  { id: '2', name: 'Test2', genre: 'Action'},
-  { id: '3', name: 'Test3', genre: 'Fiction'},
+  { id: '1', name: 'Test1', genre: 'Fantasy', authorId: '3'},
+  { id: '2', name: 'Test2', genre: 'Action', authorId: '2'},
+  { id: '3', name: 'Test3', genre: 'Fiction', authorId: '1'},
+  { id: '4', name: 'Test4', genre: 'Action', authorId: '2'},
+  { id: '5', name: 'Test5', genre: 'Action', authorId: '2'},
+  { id: '6', name: 'Test6', genre: 'Fiction', authorId: '3'},
 ]
 
 let authors = [
@@ -23,10 +26,17 @@ let authors = [
 
 const BookType = new GraphQLObjectType({
   name: 'Book',
+  description: 'BookType description',
   fields: () => ({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
-    genre: { type: GraphQLString }
+    genre: { type: GraphQLString },
+    author: {
+      type: AuthorType,
+      resolve(parent,args) {
+        return _.find(authors,{ id: parent.authorId });
+      }
+    }
   })
 });
 
@@ -41,6 +51,7 @@ const AuthorType = new GraphQLObjectType({
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
+  description: 'This is a description for RootQuery',
   fields: {
     book: {
       type: BookType,
