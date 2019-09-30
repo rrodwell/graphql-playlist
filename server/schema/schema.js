@@ -83,6 +83,28 @@ const RootQuery = new GraphQLObjectType({
   }
 });
 
+// Functions or Methods use to mutate the data in the DB. Ie. add, delete, update.
+const Mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addAuthor: {
+      type: AuthorType,
+      args: {
+        name: { type: GraphQLString },
+        age: { type: GraphQLInt }
+      },
+      resolve(parent,args) {
+        let author = new Author({ //MongoDB Model
+          name: args.name,
+          age: args.age
+        }); 
+        author.save(); //Save method comes from mongo 
+      } 
+    }
+  }
+})
+
 module.exports = new GraphQLSchema({
-  query: RootQuery
+  query: RootQuery, //The different queries a user can use
+  mutation: Mutation //The different mutations (CRUD operations) a user can perform
 })
