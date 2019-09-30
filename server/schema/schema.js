@@ -23,6 +23,9 @@ const BookType = new GraphQLObjectType({
       type: AuthorType,
       resolve(parent,args) {
         // return _.find(authors,{ id: parent.authorId });
+
+        //Code to get data from DB / other source
+        return Author.findById(parent.authorId);
       }
     }
   })
@@ -38,6 +41,7 @@ const AuthorType = new GraphQLObjectType({
       type: new GraphQLList(BookType),
       resolve(parent,args) {
         // return _.filter(books, { authorId: parent.id });
+        return Book.find({ authorId: parent.id });
       }
     }
   })
@@ -53,8 +57,10 @@ const RootQuery = new GraphQLObjectType({
         id: { type: GraphQLID }
       },
       resolve(parent,args){
-        //Code to get data from DB / other source
         // return _.find(books, { id: args.id })
+        
+        //Code to get data from DB / other source
+        return Book.findById(args.id);
       }
     },
     author: {
@@ -63,14 +69,15 @@ const RootQuery = new GraphQLObjectType({
         id: { type: GraphQLID }
       },
       resolve(parent,args){
-        //Code to get data from DB / other source
         // return _.find(authors, { id: args.id })
+        return Author.findById(args.id);
       }
     },
     books: {
       type: new GraphQLList(BookType),
       resolve(parent,args) {
         // return books
+        return Book.find({}); // Passing in an empty object returns all bc they all match
       }
     },
     authors: {
@@ -78,6 +85,7 @@ const RootQuery = new GraphQLObjectType({
       description: 'What is this endpoint? This returns a list of all authors',
       resolve(parent,args) {
         // return authors
+        return Author.find({});
       }
     }
   }
@@ -98,7 +106,24 @@ const Mutation = new GraphQLObjectType({
           name: args.name,
           age: args.age
         }); 
-        author.save(); //Save method comes from mongo 
+        return author.save(); //Save method comes from mongo 
+      } 
+    },
+    addBook: {
+      type: BookType,
+      description: 'Add a new book to mongoDB',
+      args: {
+        name: { type: GraphQLString },
+        genre: { type: GraphQLString },
+        authorId: { type: GraphQLID }
+      },
+      resolve(parent,args) {
+        let book = new Book({
+          name: args.name,
+          genre: args.genre,
+          authorId: args.authorId
+        }); 
+        return book.save();
       } 
     }
   }
