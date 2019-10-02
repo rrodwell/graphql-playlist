@@ -12,6 +12,7 @@ const getBooksQuery = gql`
 `
 
 class BookList extends React.Component {
+  
   displayBooks(){
     let data = this.props.data;
     if(data.loading){
