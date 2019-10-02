@@ -3,7 +3,7 @@ import { graphql } from 'react-apollo';
 import { getBooksQuery } from '../queries/queries';
 
 class BookList extends React.Component {
-  
+
   displayBooks(){
     let data = this.props.data;
     if(data.loading){
