@@ -1,6 +1,7 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
-import { getAuthorsQuery } from '../queries/queries';
+import _ from 'lodash';
+import { getAuthorsQuery, addBookMutation } from '../queries/queries';
 class AddBook extends React.Component {
   state = {
     name: '',
@@ -9,11 +10,11 @@ class AddBook extends React.Component {
   }
 
   displayAuthors(){
-    let { data } = this.props;
-    if(data.loading){
+    let { getAuthorsQuery } = this.props;
+    if(getAuthorsQuery.loading){
       return <option disabled>Loading authors</option>
     } else {
-      return data.authors.map(author => 
+      return getAuthorsQuery.authors.map(author => 
         <option key={author.id} value={author.id}>
           {author.name}
         </option>
@@ -50,4 +51,7 @@ class AddBook extends React.Component {
   }
 }
 
-export default graphql(getAuthorsQuery)(AddBook);
+export default _.flowRight(
+  graphql(getAuthorsQuery,{name: "getAuthorsQuery"}),
+  graphql(addBookMutation,{name: "addBookMutation"})
+)(AddBook);
