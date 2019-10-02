@@ -12,8 +12,8 @@ const getBooksQuery = gql`
 `
 
 class BookList extends React.Component {
-
   render(){
+    console.log(this.props)
     return (
       <div>
         <ul id='book-list'>
@@ -24,4 +24,4 @@ class BookList extends React.Component {
   }
 }
 
-export default graphql(getBooksQuery )(BookList);
+export default graphql(getBooksQuery)(BookList);
