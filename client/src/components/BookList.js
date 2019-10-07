@@ -22,6 +22,7 @@ class BookList extends React.Component {
   }
 
   render(){
+    console.log('bookList', this.props)
     return (
       <div>
         <ul id='book-list'>
